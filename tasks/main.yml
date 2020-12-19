@@ -78,9 +78,14 @@
     name: kimai
     state: present
 
-- name: Kimai | Create database user
-  command: "mysql -u {{ k_mysql_root_user }} -p{{ k_mysql_root_password }} -e \"GRANT ALL PRIVILEGES ON *.* TO '{{ k_mysql_user }}'@'localhost' IDENTIFIED BY '{{ k_mysql_password }}';\""
-
+- name: create user
+    community.mysql.mysql_user:
+      check_implicit_admin: yes
+      name: '{{ k_mysql_root_user }}'
+      password: '{{ k_mysql_root_password }}'
+      priv: '*.*:ALL,GRANT'
+      state: present
+      
 - name: Kimai | Create kimai directory in /var/www/
   file:
     path: "/var/www/{{ k_domainname }}"
