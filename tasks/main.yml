@@ -72,10 +72,11 @@
     mode: 0755
   when: k_webserver == 'apache'
 
-- name: Kimai | Create mysql database
-  community.mysql.mysql_db:
-    name: '{{ k_mysql_user }}'
-    state: present
+- name: start & enable mariadb
+  systemd:
+    name: mariadb
+    enabled: yes
+    state: started
 
 - name: Kimai | Create database user
   community.mysql.mysql_user:
@@ -83,6 +84,11 @@
     name: '{{ k_mysql_user }}'
     password: '{{ k_mysql_password }}'
     priv: '*.*:ALL,GRANT'
+    state: present
+
+- name: Kimai | Create mysql database
+  community.mysql.mysql_db:
+    name: '{{ k_mysql_user }}'
     state: present
       
 - name: Kimai | Create kimai directory in /var/www/
